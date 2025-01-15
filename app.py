@@ -37,19 +37,11 @@ if st.button("🚀 Start Simulation"):
     progress_bar = st.progress(0)
 
     # Run Simulation
-    logs = []
-    current_temp = random.randint(20, 40)
+    logs = furnace_simulation(target_temp, duration)
 
-    for second in range(duration):
-        if current_temp < target_temp:
-            current_temp += random.uniform(0.5, 1.5)
-        elif current_temp > target_temp:
-            current_temp -= random.uniform(0.3, 1.0)
-        logs.append((second, round(current_temp, 2)))
-
-        # Update progress bar
-        progress_bar.progress((second + 1) / duration)
-        time.sleep(0.1)  # Simulate real-time data collection
+    # Update Progress Bar
+    for i in range(len(logs)):
+        progress_bar.progress((i + 1) / len(logs))
 
     st.success("✅ Simulation Complete!")
 
