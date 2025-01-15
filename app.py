@@ -1,6 +1,6 @@
 import streamlit as st
 import random
-import matplotlib.pyplot as plt
+import time
 
 # Function to simulate the furnace process
 def furnace_simulation(target_temp, duration):
@@ -12,31 +12,39 @@ def furnace_simulation(target_temp, duration):
         elif current_temp > target_temp:
             current_temp -= random.uniform(0.3, 1.0)
         logs.append((second, round(current_temp, 2)))
+        time.sleep(0.1)  # Simulate real-time data collection
+        st.progress((second + 1) / duration)
     return logs
 
-# Plot the simulation data
-def plot_furnace_data(logs, target_temp):
+# Enhanced App Layout
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>🌡️ Furnace Temperature Monitoring App 🌡️</h1>", unsafe_allow_html=True)
+st.write("Simulate and monitor furnace temperature changes over time.")
+
+# Input Section with Columns
+col1, col2 = st.columns(2)
+
+with col1:
+    target_temp = st.number_input("🎯 Target Temperature (°C):", min_value=50, max_value=2000, value=100)
+
+with col2:
+    duration = st.number_input("⏱️ Duration (seconds):", min_value=10, max_value=300, value=30)
+
+# Button to Start Simulation
+if st.button("🚀 Start Simulation"):
+    st.markdown("<h3 style='color: #FF5733;'>Simulation in Progress...</h3>", unsafe_allow_html=True)
+    
+    # Run Simulation
+    logs = furnace_simulation(target_temp, duration)
+    st.success("✅ Simulation Complete!")
+
+    # Display Results
+    st.markdown("<h3 style='color: #3498DB;'>📈 Temperature Data</h3>", unsafe_allow_html=True)
     times = [log[0] for log in logs]
     temps = [log[1] for log in logs]
-    plt.figure(figsize=(10, 5))
-    plt.plot(times, temps, label="Current Temperature")
-    plt.axhline(y=target_temp, color="red", linestyle="--", label="Target Temperature")
-    plt.xlabel("Time (s)")
-    plt.ylabel("Temperature (°C)")
-    plt.title("Furnace Temperature Monitoring")
-    plt.legend()
-    plt.grid(True)
-    st.pyplot(plt)
+    st.line_chart({"Time (s)": times, "Temperature (°C)": temps})
 
-# Streamlit App Layout
-st.title("Furnace Temperature Monitoring App")
-
-# Inputs
-target_temp = st.number_input("Enter Target Temperature (°C):", min_value=50, max_value=2000, value=100)
-duration = st.number_input("Enter Duration (seconds):", min_value=10, max_value=300, value=30)
-
-# Run Simulation
-if st.button("Start Simulation"):
-    logs = furnace_simulation(target_temp, duration)
-    st.write(f"Simulation completed for target temperature: {target_temp}°C and duration: {duration} seconds.")
-    plot_furnace_data(logs, target_temp)
+    # Final Report
+    st.markdown(
+        f"<h4 style='color: #8E44AD;'>📊 Final Temperature: {temps[-1]}°C (Target: {target_temp}°C)</h4>",
+        unsafe_allow_html=True,
+    )
