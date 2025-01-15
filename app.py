@@ -1,15 +1,13 @@
-# Function to simulate the furnace process
+# Function to simulate the furnace process with real-time updates
 def furnace_simulation(target_temp, duration):
     current_temp = random.randint(20, 40)
-    logs = []
     for second in range(duration):
         if current_temp < target_temp:
             current_temp += random.uniform(0.5, 1.5)
         elif current_temp > target_temp:
             current_temp -= random.uniform(0.3, 1.0)
-        logs.append((second, round(current_temp, 2)))
+        yield second, round(current_temp, 2)
         time.sleep(0.1)  # Simulate real-time data collection
-    return logs
 
 # Button to Start Simulation
 if st.button("🚀 Start Simulation"):
@@ -19,11 +17,12 @@ if st.button("🚀 Start Simulation"):
     progress_bar = st.progress(0)
 
     # Run Simulation
-    logs = furnace_simulation(target_temp, duration)
-
-    # Update Progress Bar
-    for i in range(len(logs)):
-        progress_bar.progress((i + 1) / len(logs))
+    logs = []
+    for second, current_temp in furnace_simulation(target_temp, duration):
+        logs.append((second, current_temp))
+        
+        # Update progress bar in real-time
+        progress_bar.progress((second + 1) / duration)
 
     st.success("✅ Simulation Complete!")
 
