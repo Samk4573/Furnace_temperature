@@ -14,6 +14,20 @@ def furnace_simulation(target_temp, duration):
         yield second, round(current_temp, 2)
         time.sleep(0.1)  # Simulate real-time data collection
 
+
+# Enhanced App Layout
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>🌡️ Furnace Temperature Monitoring App 🌡️</h1>", unsafe_allow_html=True)
+st.write("Simulate and monitor furnace temperature changes over time.")
+
+# Input Section with Columns
+col1, col2 = st.columns(2)
+
+with col1:
+    target_temp = st.number_input("🎯 Target Temperature (°C):", min_value=10, max_value=2000, value=100)
+
+with col2:
+    duration = st.number_input("⏱️ Duration (seconds):", min_value=10, max_value=300, value=30)
+
 # Button to Start Simulation
 if st.button("🚀 Start Simulation"):
     st.markdown("<h3 style='color: #FF5733;'>Simulation in Progress...</h3>", unsafe_allow_html=True)
