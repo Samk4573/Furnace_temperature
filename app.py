@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 import time
+import matplotlib.pyplot as plt
 
 # Function to simulate the furnace process
 def furnace_simulation(target_temp, duration):
@@ -53,10 +54,24 @@ if st.button("🚀 Start Simulation"):
     st.success("✅ Simulation Complete!")
 
     # Display Results
-    st.markdown("<h3 style='color: #3498DB;'>📈 Temperature Data</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #3498DB;'>📈 Temperature vs Time</h3>", unsafe_allow_html=True)
+
+    # Extract data
     times = [log[0] for log in logs]
     temps = [log[1] for log in logs]
-    st.line_chart({"Temperature (°C)": temps, "Time (s)": times})
+
+    # Plot with Matplotlib
+    plt.figure(figsize=(10, 5))
+    plt.plot(times, temps, marker='o', color='blue', label='Temperature')
+    plt.axhline(y=target_temp, color='red', linestyle='--', label='Target Temperature')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Temperature (°C)")
+    plt.title("Furnace Temperature Monitoring")
+    plt.legend()
+    plt.grid(True)
+    
+    # Render the plot
+    st.pyplot(plt)
 
     # Final Report
     st.markdown(
