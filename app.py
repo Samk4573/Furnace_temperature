@@ -13,7 +13,6 @@ def furnace_simulation(target_temp, duration):
             current_temp -= random.uniform(0.3, 1.0)
         logs.append((second, round(current_temp, 2)))
         time.sleep(0.1)  # Simulate real-time data collection
-        st.progress((second + 1) / duration)
     return logs
 
 # Enhanced App Layout
@@ -33,15 +32,31 @@ with col2:
 if st.button("🚀 Start Simulation"):
     st.markdown("<h3 style='color: #FF5733;'>Simulation in Progress...</h3>", unsafe_allow_html=True)
     
+    # Add a single progress bar object
+    progress_bar = st.progress(0)
+
     # Run Simulation
-    logs = furnace_simulation(target_temp, duration)
+    logs = []
+    current_temp = random.randint(20, 40)
+
+    for second in range(duration):
+        if current_temp < target_temp:
+            current_temp += random.uniform(0.5, 1.5)
+        elif current_temp > target_temp:
+            current_temp -= random.uniform(0.3, 1.0)
+        logs.append((second, round(current_temp, 2)))
+
+        # Update progress bar
+        progress_bar.progress((second + 1) / duration)
+        time.sleep(0.1)  # Simulate real-time data collection
+
     st.success("✅ Simulation Complete!")
 
     # Display Results
     st.markdown("<h3 style='color: #3498DB;'>📈 Temperature Data</h3>", unsafe_allow_html=True)
     times = [log[0] for log in logs]
     temps = [log[1] for log in logs]
-    st.line_chart({"Time (s)": times, "Temperature (°C)": temps})
+    st.line_chart({"Temperature (°C)": temps, "Time (s)": times})
 
     # Final Report
     st.markdown(
