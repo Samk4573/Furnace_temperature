@@ -24,7 +24,7 @@ st.write("Simulate and monitor furnace temperature changes over time.")
 col1, col2 = st.columns(2)
 
 with col1:
-    target_temp = st.number_input("🎯 Target Temperature (°C):", min_value=50, max_value=2000, value=100)
+    target_temp = st.number_input("🎯 Target Temperature (°C):", min_value=10, max_value=2000, value=100)
 
 with col2:
     duration = st.number_input("⏱️ Duration (seconds):", min_value=10, max_value=300, value=30)
