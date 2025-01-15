@@ -53,28 +53,35 @@ if st.button("🚀 Start Simulation"):
 
     st.success("✅ Simulation Complete!")
 
-    # Display Results
-    st.markdown("<h3 style='color: #3498DB;'>📈 Temperature vs Time</h3>", unsafe_allow_html=True)
-
     # Extract data
     times = [log[0] for log in logs]
     temps = [log[1] for log in logs]
 
-    # Plot with Matplotlib
+    # Identify steady-state time
+    threshold = 1.0  # ±1°C tolerance
+    steady_state_time = next((t for t, temp in logs if abs(temp - target_temp) <= threshold), None)
+
+    # Plot Results
+    st.markdown("<h3 style='color: #3498DB;'>📈 Temperature vs Time</h3>", unsafe_allow_html=True)
     plt.figure(figsize=(10, 5))
-    plt.plot(times, temps, color='blue', label='Temperature')
+    plt.plot(times, temps, marker='o', color='blue', label='Temperature')
     plt.axhline(y=target_temp, color='red', linestyle='--', label='Target Temperature')
     plt.xlabel("Time (s)")
     plt.ylabel("Temperature (°C)")
     plt.title("Furnace Temperature Monitoring")
     plt.legend()
     plt.grid(True)
-    
-    # Render the plot
     st.pyplot(plt)
 
-    # Final Report
-    st.markdown(
-        f"<h4 style='color: #8E44AD;'>📊 Final Temperature: {temps[-1]}°C (Target: {target_temp}°C)</h4>",
-        unsafe_allow_html=True,
-    )
+    # Display Final Report
+    st.markdown(f"<h4 style='color: #8E44AD;'>📊 Final Temperature: {temps[-1]}°C (Target: {target_temp}°C)</h4>", unsafe_allow_html=True)
+    if steady_state_time is not None:
+        st.markdown(
+            f"<h4 style='color: #2ECC71;'>⏱️ Steady-State Achieved at: {steady_state_time} seconds</h4>",
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            "<h4 style='color: #E74C3C;'>⚠️ Steady-State Not Achieved During Simulation</h4>",
+            unsafe_allow_html=True,
+        )
