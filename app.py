@@ -1,3 +1,8 @@
+import streamlit as st
+import random
+import time
+import matplotlib.pyplot as plt
+
 # Function to simulate the furnace process with real-time updates
 def furnace_simulation(target_temp, duration):
     current_temp = random.randint(20, 40)
