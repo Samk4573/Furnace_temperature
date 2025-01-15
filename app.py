@@ -62,7 +62,7 @@ if st.button("🚀 Start Simulation"):
 
     # Plot with Matplotlib
     plt.figure(figsize=(10, 5))
-    plt.plot(times, temps, marker='o', color='blue', label='Temperature')
+    plt.plot(times, temps, color='blue', label='Temperature')
     plt.axhline(y=target_temp, color='red', linestyle='--', label='Target Temperature')
     plt.xlabel("Time (s)")
     plt.ylabel("Temperature (°C)")
